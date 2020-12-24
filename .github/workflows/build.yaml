@@ -23,7 +23,7 @@ jobs:
       - name: Upload
         run: |
           conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
-          conan upload magnum/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
+          conan upload magnum-integration/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
 
 
   windows:
@@ -47,5 +47,5 @@ jobs:
       - name: Upload
         run: |
           conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
-          conan upload magnum/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
+          conan upload magnum-integration/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
 

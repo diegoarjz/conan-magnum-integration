@@ -1,0 +1,51 @@
+name: Build
+on: push
+
+jobs:
+  macos:
+    name: "macOs"
+    runs-on: macos-latest
+    strategy:
+      fail-fast: true
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: |
+            pip3 install wheel setuptools
+            pip3 install conan
+            conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+            conan remote add helmesjo "https://api.bintray.com/conan/helmesjo/public-conan"
+      - name: Build
+        run: |
+          conan create . pagoda/stable --build=missing
+      - name: Upload
+        run: |
+          conan remote add pagoda https://api.bintray.com/conan/diegoarjz/Pagoda
+          conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
+          conan upload magnum/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
+
+
+  windows:
+    name: "Windows"
+    runs-on: windows-latest
+    strategy:
+      fail-fast: true
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: |
+            pip3 install wheel setuptools
+            pip3 install conan
+            conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+            conan remote add helmesjo "https://api.bintray.com/conan/helmesjo/public-conan"
+      - name: Build
+        run: |
+          conan create . pagoda/stable --build=missing
+      - name: Upload
+        run: |
+          conan remote add pagoda https://api.bintray.com/conan/diegoarjz/Pagoda
+          conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
+          conan upload magnum/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
+

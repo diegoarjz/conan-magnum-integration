@@ -23,7 +23,7 @@ jobs:
         run: |
           conan remote add pagoda https://api.bintray.com/conan/diegoarjz/Pagoda
           conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
-          conan upload magnum/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
+          conan upload magnum-integration/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
 
 
   windows:
@@ -47,5 +47,61 @@ jobs:
         run: |
           conan remote add pagoda https://api.bintray.com/conan/diegoarjz/Pagoda
           conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
-          conan upload magnum/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
+          conan upload magnum-integration/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
 
+  ubuntu-gcc:
+    name: "Ubuntu-gcc"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: |
+          sudo apt-get install -y libgl1-mesa-dev
+          pip3 install wheel setuptools
+          pip3 install conan
+          export PATH=$PATH:/home/runner/.local/bin
+          conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+          conan remote add helmesjo https://api.bintray.com/conan/helmesjo/public-conan
+      - name: Build
+        run: |
+          export PATH=$PATH:/home/runner/.local/bin
+          conan create . pagoda/stable --build=missing
+      - name: Upload
+        run: |
+          export PATH=$PATH:/home/runner/.local/bin
+          conan remote add pagoda https://api.bintray.com/conan/diegoarjz/Pagoda
+          conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
+          conan upload magnum-integration/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
+
+  ubuntu-clang:
+    name: "Ubuntu-clang"
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: |
+          sudo apt-get install -y libgl1-mesa-dev
+          pip3 install wheel setuptools
+          pip3 install conan
+          export PATH=$PATH:/home/runner/.local/bin
+          conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan
+          conan remote add helmesjo https://api.bintray.com/conan/helmesjo/public-conan
+      - name: Build
+        env:
+          CC: "clang"
+          CXX: "clang++"
+        run: |
+          export PATH=$PATH:/home/runner/.local/bin
+          conan create . pagoda/stable --build=missing
+      - name: Upload
+        run: |
+          export PATH=$PATH:/home/runner/.local/bin
+          conan remote add pagoda https://api.bintray.com/conan/diegoarjz/Pagoda
+          conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
+          conan upload magnum-integration/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm

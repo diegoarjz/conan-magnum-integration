@@ -118,6 +118,8 @@ class LibnameConan(ConanFile):
     def package(self):
         cmake = self._configure_cmake()
         cmake.install()
+        self.copy("{}/*".format(self._imgui_subfolder))
+        self.copy("{}/modules/*".format(self._source_subfolder))
 
     def package_info(self):
         # See dependency order here: https://doc.magnum.graphics/magnum/custom-buildsystems.html

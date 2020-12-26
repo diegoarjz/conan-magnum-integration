@@ -73,7 +73,6 @@ jobs:
       - name: Upload
         run: |
           export PATH=$PATH:/home/runner/.local/bin
-          conan remote add pagoda https://api.bintray.com/conan/diegoarjz/Pagoda
           conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
           conan upload magnum-integration/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
 
@@ -104,6 +103,5 @@ jobs:
       - name: Upload
         run: |
           export PATH=$PATH:/home/runner/.local/bin
-          conan remote add pagoda https://api.bintray.com/conan/diegoarjz/Pagoda
           conan user -p ${{ secrets.CONAN_API_KEY }} -r pagoda ${{ secrets.CONAN_USER }}
           conan upload magnum-integration/2020.06@pagoda/stable -r pagoda --all --force --retry 3 --retry-wait 60 --confirm
